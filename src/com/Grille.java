@@ -3,10 +3,6 @@
  */
 package com;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-
 /**
  * @author Lilian
  *
@@ -15,19 +11,13 @@ public class Grille implements Cloneable{
 
 	private Cellule[][] laGrille;
 	private int taille;
-	// Variable globale
+	// Variables globales
 	private int AGE_MORT = 5;
 	private int ENERGIE_REPRODUCTION = 10;
 	
-	/*
-	private int pourcentage;
-	private int age;
-	private int energie;
-	private String libelle;
-	private String file;
-	*/
 	
 	// Constructeurs
+	
 	/**
 	 * Constructeur de la classe. Initialise une grille de Cellule grâce à une double boucle.
 	 * 
@@ -43,25 +33,10 @@ public class Grille implements Cloneable{
 			}
 		}
 	}
+
 	
-	/*public Grille(int taille, int pourcentage) {
-		this.taille = taille;
-		this.pourcentage = pourcentage;
-	}
-	
-	public Grille(int taille, int pourcentage, String libelle, int age, int energie) {
-		this.taille = taille;
-		this.pourcentage = pourcentage;
-		this.libelle = libelle;
-		this.age = age;
-		this.energie = energie;
-	}
-	
-	public Grille(String file) {
-		this.file = file;
-	}*/
-		
 	// Grilles
+	
 	/**
 	 * Permet d'afficher la grille en récupérant l'état de la cellule.
 	 * Parcours de la grille à l'aide d'une double boucle.
@@ -76,40 +51,9 @@ public class Grille implements Cloneable{
 			System.out.println(ligne);
 		}
 	}
-	
-	/*public int[][] EcritureGrille(File fichier, int taille) {
-		int[][] tableauVoisins = new int[taille][taille];
-		
-		// /!\ NEW /!\
-		// On essaye de remplir le tableau par fichier.
-		File file = new File("D:\\Cours\\Bachelor\\java\\TP\\Jeux_De_La_Vie\\src\\doc_grilles\\grille.txt");
-		
-		FileReader fr = new FileReader(file);
-		
-		int sCurrentLine;
-		BufferedReader br = new BufferedReader(fr);
-		
-		int ii=0,jj=0;
-		while ((sCurrentLine = br.read()) != -1) {
-			char ch = (char) sCurrentLine;
-			System.out.println(ch);
-			if (ii==4) {
-				ii=0;
-				jj++;
-			} else jj++;
-		}
-		return tableauVoisins;
-	}*/
+
 	
 	// Voisins
-	/*public Cellule VoisinNord(int i, int j) {
-		Cellule c = new Cellule();
-		int posY;
-		if(maCase.posY == 0) {
-			posY = 5;
-		}
-		return c;
-	}*/
 	
 	/**
 	 * Permet de trouver la voisin de nord de la cellule.
@@ -276,53 +220,6 @@ public class Grille implements Cloneable{
 		return getLaGrille()[posY][posX];
 	}
 	
-	// Jeux
-	/**
-	 * Applique les règles du jeu (niv 1).
-	 * 
-	 * @param maCase		La Cellule pour laquelle on applique les règles
-	 * @param nbrVoisins	Le nombre de voisins que possède cette cellule (voisin => etat = 1);
-	 * @return La nouvelle cellule.
-	 */
-	public Cellule JeuNiveau1(Cellule maCase, int nbrVoisins) {
-		
-		if (nbrVoisins >= 4 || nbrVoisins == 1) // Mort
-			maCase.setEtat(0);
-		if (nbrVoisins == 3 || nbrVoisins == 2) // Survie/Naissance
-			maCase.setEtat(1);
-		
-		return maCase;
-	}
-	
-	/**
-	 * Applique les règles du jeu (niv 2).
-	 * 
-	 * @param maCase		La Cellule pour laquelle on applique les règles
-	 * @param nbrVoisins	Le nombre de voisins que possède cette cellule (voisin => etat = 1);
-	 * @return La nouvelle cellule.
-	 */
-	public Cellule JeuNiveau2(Cellule maCase, int nbrVoisins) {
-		// On commence par appliquer les mêmes règles que pour le niv 1.
-		JeuNiveau1(maCase, nbrVoisins);
-		
-		// Puis on applique les règles pour le niv 2.
-		int ageCase = maCase.getAGE();
-		int nrjCase = maCase.getENERGIE();
-		// VIEILLISSEMENT
-		if (ageCase < AGE_MORT) { 
-			maCase.setAGE(ageCase+1);			
-		} else {
-			maCase.celluleMeurt();
-		}
-		// REPRODUCTION
-		if (ageCase < AGE_MORT && nrjCase >= ENERGIE_REPRODUCTION && nbrVoisins != 8) {
-			if (reproduction(maCase))
-				maCase.setENERGIE(nrjCase - ENERGIE_REPRODUCTION);
-		}
-			
-		return maCase;
-	}
-	
 	/**
 	 * Permet d'avoir le nombre de voisins d'un Celulle. (utile pour jeu niv 1 et 2).
 	 * 
@@ -365,6 +262,60 @@ public class Grille implements Cloneable{
 		return nbrVoisins;
 	}
 	
+	
+	// Jeux
+	
+	/**
+	 * Applique les règles du jeu (niv 1).
+	 * 
+	 * @param maCase		La Cellule pour laquelle on applique les règles
+	 * @param nbrVoisins	Le nombre de voisins que possède cette cellule (voisin => etat = 1);
+	 * @return La nouvelle cellule.
+	 */
+	public Cellule JeuNiveau1(Cellule maCase, int nbrVoisins) {
+		
+		if (nbrVoisins >= 4 || nbrVoisins == 1) // Mort
+			maCase.celluleMeurt();
+		if (nbrVoisins == 3 || nbrVoisins == 2) // Survie/Naissance
+			maCase.celluleNait();
+		
+		return maCase;
+	}
+	
+	/**
+	 * Applique les règles du jeu (niv 2).
+	 * 
+	 * @param maCase		La Cellule pour laquelle on applique les règles
+	 * @param nbrVoisins	Le nombre de voisins que possède cette cellule (voisin => etat = 1);
+	 * @return La nouvelle cellule.
+	 */
+	public Cellule JeuNiveau2(Cellule maCase, int nbrVoisins) {
+		// On commence par appliquer les mêmes règles que pour le niv 1.
+		JeuNiveau1(maCase, nbrVoisins);
+		
+		// Puis on applique les règles pour le niv 2.
+		int ageCase = maCase.getAGE();
+		int nrjCase = maCase.getENERGIE();
+		
+		// VIEILLISSEMENT
+		if (ageCase < AGE_MORT) { 
+			maCase.setAGE(ageCase+1);			
+		} else {
+			maCase.celluleMeurt();
+		}
+		
+		// REPRODUCTION
+		if (ageCase < AGE_MORT && nrjCase >= ENERGIE_REPRODUCTION && nbrVoisins != 8) {
+			if (reproduction(maCase))
+				maCase.setENERGIE(nrjCase - ENERGIE_REPRODUCTION);
+		}
+			
+		return maCase;
+	}
+	
+	
+	// Fonctions utiles
+	
 	/**
 	 * Permet de reproduire ou non une Cellule en fonction d'une Cellule donnée.
 	 * 
@@ -375,14 +326,12 @@ public class Grille implements Cloneable{
 		boolean cReproduit = false; // On initialise une variable qui sera celle renvoyée par la fonction.
 		
 		// On initialise un tableau de Cellule qui sont les voisins de la cellule envoyée en param.
-		Cellule[] voisins = {VoisinEst(maCase), VoisinOuest(maCase),
-		                     VoisinSud(maCase), VoisinNord(maCase),
-		                     VoisinNordEst(maCase), VoisinNordOuest(maCase),
-		                     VoisinSudEst(maCase), VoisinSudOuest(maCase)};
+		Cellule[] voisins = {VoisinEst(maCase), VoisinOuest(maCase), VoisinSud(maCase), VoisinNord(maCase),
+		                     VoisinNordEst(maCase), VoisinNordOuest(maCase), VoisinSudEst(maCase), VoisinSudOuest(maCase)};
 		
 		// On créé une boucle qui va venir regarder l'état du voisin.
 		for (int i = 0; i < voisins.length; i++) {
-			if (voisins[i].getEtat() == 1) { // Si celui-ci est à un (= cellule vivante).
+			if (voisins[i].getEtat() == 1) { // Si celui-ci est à 1 (= cellule vivante).
 				cReproduit = true; // on change la variable de retour de la fonction a true.
 				voisins[i].celluleNait(); // on fait naitre une cellule sur la cellule voisine concernée.
 			}
@@ -391,27 +340,9 @@ public class Grille implements Cloneable{
 		return cReproduit;
 	}
 	
-	/*public void test(Cellule maCase) {
-		maCase.setEtat(0);
-	}*/
 	
-	/**
-	 * Permet de clonner une grille donnée.
-	 * 
-	 * @param grillec	La grille donnée.
-	 * @throws CloneNotSupportedException Clone.
-	 */
-	public void Clone(Grille grillec) throws CloneNotSupportedException{
-		this.laGrille = grillec.laGrille.clone();
-		this.taille = grillec.taille;
-		for (int i = 0; i < this.taille; i++) {
-			for (int j = 0; j < this.taille; j++) {
-				this.getLaGrille()[i][j].Clone(grillec.getLaGrille()[i][j]);
-			}
-		}
-	}
-
 	// GETTEUR & SETTEUR
+	
 	/**
 	 * Permet de retourner la Grille.
 	 * @return	Retourne la Grille.

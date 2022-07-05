@@ -10,7 +10,7 @@ import java.util.Random;
  *
  */
 public class Cellule {
-	// Variable de la classe.
+	// Variables de la classe.
 	private int etat;
 	private int posX;
 	private int posY;
@@ -126,20 +126,6 @@ public class Cellule {
 	 */
 	public int getENERGIE_INITIALE() {
 		return ENERGIE_INITIALE;
-	}
-
-	/**
-	 * Permet de clonner une cellule.
-	 * 
-	 * @param myCell La cellule qui l'on clone.
-	 */
-	public void Clone(Cellule myCell) {
-		this.posX = myCell.posX;
-		this.posY = myCell.posY;
-		this.etat = myCell.etat;
-		this.AGE = myCell.AGE;
-		this.ENERGIE = myCell.ENERGIE;
-		this.ENERGIE_INITIALE = myCell.ENERGIE_INITIALE;
 	}
 	
 	@Override
